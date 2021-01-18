@@ -13,11 +13,17 @@ const (
 
 // First returns the first value in the sequence
 func First(args ...data.Value) data.Value {
+	if c, ok := args[0].(data.Cons); ok {
+		return c.Car()
+	}
 	return args[0].(data.Sequence).First()
 }
 
 // Rest returns the sequence elements after the first value
 func Rest(args ...data.Value) data.Value {
+	if c, ok := args[0].(data.Cons); ok {
+		return c.Cdr()
+	}
 	return args[0].(data.Sequence).Rest()
 }
 
