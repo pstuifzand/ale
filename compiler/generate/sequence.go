@@ -17,6 +17,7 @@ const (
 var (
 	vectorSym = env.RootSymbol("vector")
 	objectSym = env.RootSymbol("object")
+	dictSym = env.RootSymbol("dict")
 )
 
 // Block encodes a set of expressions, returning only the final evaluation
@@ -44,10 +45,13 @@ func Sequence(e encoder.Encoder, s data.Sequence) {
 		Vector(e, typed)
 	case data.Object:
 		Object(e, typed)
+	case data.Dict:
+		Dict(e, typed)
 	default:
 		panic(fmt.Errorf(errCannotCompile, s))
 	}
 }
+
 
 // Vector encodes a vector
 func Vector(e encoder.Encoder, v data.Vector) {
@@ -63,5 +67,15 @@ func Object(e encoder.Encoder, a data.Object) {
 		args = append(args, v.Car(), v.Cdr())
 	}
 	f := resolveBuiltIn(e, objectSym)
+	callApplicative(e, f.Call(), args)
+}
+
+func Dict(e encoder.Encoder, a data.Dict) {
+	args := data.Values{}
+	for f, r, ok := a.Split(); ok; f, r, ok = r.Split() {
+		v := f.(data.Pair)
+		args = append(args, v.Car(), v.Cdr())
+	}
+	f := resolveBuiltIn(e, dictSym)
 	callApplicative(e, f.Call(), args)
 }

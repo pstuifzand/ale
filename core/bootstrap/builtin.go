@@ -126,6 +126,8 @@ func (b *bootstrap) availableFunctions() {
 	b.applicative("str", builtin.Str)
 	b.applicative("sym", builtin.Sym, 1)
 	b.applicative("vector", builtin.Vector)
+	b.applicative("dict", data.NewHamtDict)
+	b.applicative("set", data.NewHamtSet)
 
 	b.applicative("is-appender", builtin.IsAppender, 1)
 	b.applicative("is-apply", builtin.IsApply, 1)
